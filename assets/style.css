@@ -1,0 +1,90 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body{
+ font-family: "Nunito";
+ color: #2dd4bf;
+}
+
+@font-face {
+  font-family: "Nunito"; /*a name to be used later*/
+  src: url("https://fonts.googleapis.com/css?family=Nunito"); /*URL to font*/
+}
+
+body > div {
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+a {
+  padding: 0 1rem;
+  color: inherit;
+  text-decoration: inherit;
+}
+
+a:hover {
+  transition-property: color;
+  transition-duration: 300ms;
+}
+
+.input_container{
+    position: relative;
+}
+
+.svg{
+    position: absolute;
+    width: 17px;
+    left: 0.5rem;
+    top: 0.375rem;
+    filter: invert(34%) sepia(10%) saturate(1112%) hue-rotate(176deg) brightness(90%) contrast(93%);
+}
+
+input{
+    background-color: #102D44;
+    border: 2px solid #1E3851;
+    border-radius: 0.25em;
+    color: inherit;
+    padding: 0.25rem 0.25rem 0.25rem 2rem;
+    transition-property: border-color;
+    transition-duration: 300ms;
+
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #475569;
+}
+
+input:focus{
+    outline:none;
+    border-color:#475569;
+}
+
+.Select-menu-outer, .Select-control {
+    background-color: #102D44 !important;
+    border: 2px solid #1E3851 !important;
+    border-radius: 0.25em;
+    color: inherit !important;
+    transition-property: border-color;
+    transition-duration: 300ms;
+    box-shadow:none !important
+}
+
+.Select-value-label { 
+    color: white !important;
+}
+
+.is-open>.Select-control{
+
+}
