@@ -3,10 +3,22 @@ from dash import html, dcc, callback, Input, Output, dash_table
 import plotly.express as px
 import pandas as pd
 from modules.Json import Json
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
 
 json = Json()
 corpus = json.loadCorpus()
 dicDoc = corpus.getDicDoc()
+dicDoc = corpus.sortByTitle()
+# words = corpus.clean_doc()
+# text = ' '.join(words)
+
+# wordcloud = WordCloud(background_color = 'white',max_words = 50).generate(text)
+# plt.imshow(wordcloud)
+# plt.axis("off")
+# plt.savefig('assets/Images/wordCloud.png')
+# plt.show();
 
 documents = {
     'Author': [],
@@ -72,28 +84,31 @@ layout = html.Section([
         ),
     ),
     html.Div([  # -- Container Concordancer -- #
-        dash_table.DataTable(
-            id='concord',
-            columns=[{"name": i, "id": i} for i in dc.columns],
-            style_header={
-                'backgroundColor': '#1E3851',
-                'border': '2px solid #102D44',
-                'color': 'white',
-                'textAlign': 'left',
-            },
-            style_cell={
-                'backgroundColor': '#102D44',
-                'border': '2px solid #1E3851',
-                'color': 'white',
-                'textAlign': 'left'
-            },
-            style_cell_conditional=[
-                {
-                    'if': {'column_id': 'motif trouve'},
-                    'textAlign': 'center'
-                }
-            ]
-        ),
+        html.Div([
+            dash_table.DataTable(
+                id='concord',
+                columns=[{"name": i, "id": i} for i in dc.columns],
+                style_header={
+                    'backgroundColor': '#1E3851',
+                    'border': '2px solid #102D44',
+                    'color': 'white',
+                    'textAlign': 'left',
+                },
+                style_cell={
+                    'backgroundColor': '#102D44',
+                    'border': '2px solid #1E3851',
+                    'color': 'white',
+                    'textAlign': 'left'
+                },
+                style_cell_conditional=[
+                    {
+                        'if': {'column_id': 'motif trouve'},
+                        'textAlign': 'center'
+                    }
+                ]
+            ),
+            html.Img(src='./assets/images/wordCloud.png',style={'padding':'1rem 0'}),
+        ]),
         dcc.Graph(id='graph', figure=fig)
     ],
         className='concorde_container'
@@ -102,14 +117,24 @@ layout = html.Section([
     className="container")
 
 
-@ callback(
-    Output("concord", "data"),
-    Output("graph", "figure"),
-    Input("search", "value"),
-    Input("limit", "value"),
-)
+# @callback(
+#     Output("concord", "data"),
+#     Output("graph", "figure"),
+#     Input("search", "value"),
+#     Input("limit", "value"),
+# )
+
+@callback(Output('concord', 'data'), Input('search', 'value'), Input("limit", "value"))
 def updateTable(input_value, limit):
-    graph = corpus.searchEngine(str(input_value))
+    if input_value == '':
+        df = pd.DataFrame()
+        return df.to_dict('records')
+    df = corpus.concorde(input_value, limit)
+    return df.to_dict('records')
+
+@callback(Output("graph", "figure"), Input('search', 'value'))
+def updateGraph(input_value):
+    graph = corpus.searchEngine(input_value)
     fig = px.bar(graph, labels={
         'index': 'documents', 'value': 'score'}, color_discrete_map={'score': '#2dd4bf'})
     fig.update_layout(paper_bgcolor="#102D44",
@@ -118,8 +143,4 @@ def updateTable(input_value, limit):
                       hoverlabel={
                           'bgcolor': '#1E3851'
                       })
-    if input_value == '':
-        df = pd.DataFrame()
-        return df.to_dict('records'), fig
-    df = corpus.concorde(input_value, limit)
-    return df.to_dict('records'), fig
+    return fig

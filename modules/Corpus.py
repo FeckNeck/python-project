@@ -41,21 +41,13 @@ class Corpus:
         nbDoc = len(self.dicDoc)
         self.dicDoc[nbDoc] = doc
 
-    def sortedTile(self, limit):
+    def sortByTitle(self):
         dic = dict(sorted(self.dicDoc.items(), key=lambda item: item[1].titre))
-        cpt = 1
-        for i in dic.values():
-            if cpt <= limit:
-                print(i)
-                cpt += 1
+        return dic
 
-    def sortedDate(self, limit):
+    def sortByDate(self):
         dic = dict(sorted(self.dicDoc.items(), key=lambda item: item[1].date))
-        cpt = 1
-        for i in dic.values():
-            if cpt <= limit:
-                print(i)
-                cpt += 1
+        return dic
 
     def search(self, motif):
         filtered = {}

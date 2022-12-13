@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "Nunito"; /*a name to be used later*/
+  src: url(Nunito-Regular.ttf); /*URL to font*/
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -11,11 +16,6 @@ body {
 body{
  font-family: "Nunito";
  color: #2dd4bf;
-}
-
-@font-face {
-  font-family: "Nunito"; /*a name to be used later*/
-  src: url("https://fonts.googleapis.com/css?family=Nunito"); /*URL to font*/
 }
 
 body > div {
@@ -44,11 +44,12 @@ a:hover {
     padding:2rem 0;
     display:flex;
     justify-content:center;
+    align-items:center;
+    gap: 2rem;
 }
 
 .input_container{
     position: relative;
-    padding-right: 2rem;
 }
 
 .svg{
@@ -101,7 +102,7 @@ input:focus{
     padding: 2rem 0;
 }
 
-/*.Select-menu-outer, .Select-control {
+.Select-menu-outer, .Select-control {
     background-color: #102D44 !important;
     border: 2px solid #1E3851 !important;
     border-radius: 0.25em;
@@ -113,8 +114,4 @@ input:focus{
 
 .Select-value-label { 
     color: white !important;
-}
-
-.is-open>.Select-control{
-
 }*/
