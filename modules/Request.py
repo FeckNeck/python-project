@@ -1,8 +1,8 @@
-from Document import Document, RedditDocument, ArxivDocument
-from Author import Author
+from modules.Document import Document, RedditDocument, ArxivDocument
+from modules.Author import Author
 from datetime import datetime
-from Corpus import Corpus
-from DocumentGenerator import DocumentGenerator
+from modules.Corpus import Corpus
+from modules.DocumentGenerator import DocumentGenerator
 
 import praw
 import urllib, urllib.request, xmltodict

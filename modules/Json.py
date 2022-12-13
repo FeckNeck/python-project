@@ -1,19 +1,16 @@
-import json, jsonpickle
+import json, jsonpickle,pickle
 
 class Json:
-    
-    def __init__(self):
-        self.corpus = {}
         
     def saveCorpus(self,corpus):
-        jsonCorpus = jsonpickle.encode(corpus,indent=4,make_refs=False)
-        with open('json_data.json', 'w') as outfile:
-            json.dump(jsonCorpus, outfile)
+        # jsonCorpus = jsonpickle.encode(corpus,indent=4,make_refs=False)
+        # with open('data/json_data.json', 'w') as outfile:
+        #     json.dump(jsonCorpus, outfile)
+        with open("corpus.pkl", "wb") as f:
+            pickle.dump(corpus, f)
             
     def loadCorpus(self):
-        with open('json_data.json', 'r') as f:
-            j = json.load(f)
-            self.corpus = jsonpickle.decode(j)
-
-    def getCorpus(self):
-        return self.corpus
+        # Ouverture du fichier, puis lecture avec pickle
+        with open("corpus.pkl", "rb") as f:
+            corpus = pickle.load(f)
+            return corpus

@@ -1,40 +1,30 @@
 import dash
 from dash import Dash, html, dcc
 
-# request = Request()
-# request.fetchReddit()
-# request.fecthArxiv()
+app = Dash(__name__, suppress_callback_exceptions=True, use_pages=True)
 
-# dicDoc = request.getDicDoc()
-# dicAuthor = request.getDicAuthor()
+app.layout = html.Div([
 
-# corpus = Corpus('corpus 2',dicAuthor,dicDoc,len(dicDoc),len(dicAuthor))
+    html.Div(
+        [
+            html.Div(
+                dcc.Link(
+                    f"{page['name']}", href=page["relative_path"],
+                ),
+                className='link',
+            )
+            for page in dash.page_registry.values()
+        ],
+        className="header",
+    ),
 
+    dash.page_container,
+],
+    style={
+    'background-color': '#0D2438',
+    'color': 'white'
+},
+)
 
-app = Dash(__name__, use_pages=True)
-
-# app.layout = html.Div([
-
-#     html.Div(
-#         [
-#             html.Div(
-#                 dcc.Link(
-#                     f"{page['name']}", href=page["relative_path"],
-#                 ),
-#                 className='link',
-#             )
-#             for page in dash.page_registry.values()
-#         ],
-#         className="header",
-#     ),
-
-#  	dash.page_container,
-# ],
-#     style={"height": "100vh",
-#             'background-color':'#0D2438',
-#             'color':'white'
-#             },
-# )
-
-# if __name__ == '__main__':
-#  	app.run_server(debug=True)
+if __name__ == '__main__':
+    app.run_server(debug=True)

@@ -35,12 +35,20 @@ a {
 }
 
 a:hover {
+  color:#2dd4bf;
   transition-property: color;
   transition-duration: 300ms;
 }
 
+.filters_container{
+    padding:2rem 0;
+    display:flex;
+    justify-content:center;
+}
+
 .input_container{
     position: relative;
+    padding-right: 2rem;
 }
 
 .svg{
@@ -56,10 +64,18 @@ input{
     border: 2px solid #1E3851;
     border-radius: 0.25em;
     color: inherit;
-    padding: 0.25rem 0.25rem 0.25rem 2rem;
+    padding: 0.25rem 0.25rem 0.25rem;
     transition-property: border-color;
     transition-duration: 300ms;
 
+}
+
+input[type="search"]{
+    padding-left:2rem;
+}
+
+input[type="number"]{
+    width:4rem;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -71,7 +87,21 @@ input:focus{
     border-color:#475569;
 }
 
-.Select-menu-outer, .Select-control {
+.container{
+    width:85%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.concorde_container{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    padding: 2rem 0;
+}
+
+/*.Select-menu-outer, .Select-control {
     background-color: #102D44 !important;
     border: 2px solid #1E3851 !important;
     border-radius: 0.25em;
@@ -87,4 +117,4 @@ input:focus{
 
 .is-open>.Select-control{
 
-}
+}*/
