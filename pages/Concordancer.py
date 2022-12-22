@@ -3,22 +3,25 @@ from dash import html, dcc, callback, Input, Output, dash_table
 import plotly.express as px
 import pandas as pd
 from modules.Json import Json
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
-
 
 json = Json()
 corpus = json.loadCorpus()
 dicDoc = corpus.getDicDoc()
-dicDoc = corpus.sortByTitle()
-# words = corpus.clean_doc()
-# text = ' '.join(words)
 
-# wordcloud = WordCloud(background_color = 'white',max_words = 50).generate(text)
-# plt.imshow(wordcloud)
-# plt.axis("off")
-# plt.savefig('assets/Images/wordCloud.png')
-# plt.show();
+
+def update_fig(fig):  # -- Update Graph visual -- #
+    fig.update_layout(paper_bgcolor="#102D44",
+                      plot_bgcolor='#102D44',
+                      font_color='white',
+
+                      hoverlabel={
+                          'bgcolor': '#1E3851'
+                      })
+    fig.update_xaxes(showgrid=True, gridwidth=1,
+                     gridcolor='#94a3b8', zeroline=False)
+    fig.update_yaxes(showgrid=True, gridwidth=1,
+                     gridcolor='#94a3b8', zeroline=False)
+
 
 documents = {
     'Author': [],
@@ -33,6 +36,7 @@ concordancer = {
     "contexte droit": []
 }
 
+
 for i, j in dicDoc.items():
     documents['Author'].append(j.auteur)
     documents['Title'].append(j.titre)
@@ -44,17 +48,16 @@ dc = pd.DataFrame(concordancer)
 
 dash.register_page(__name__, path='/')
 
-fig = px.bar(labels={
-    'index': 'documents', 'value': 'score'}, color_discrete_map={'score': '#2dd4bf'})
-fig.update_layout(paper_bgcolor="#102D44",
-                  plot_bgcolor='#102D44', font_color='white')
+fig = px.bar(color_discrete_map={'score': '#2dd4bf'})
+update_fig(fig)
 
 
 layout = html.Section([
     html.Div([  # -- Filter Container -- #
         html.Div([  # -- Input Search -- #
             html.Img(src='./assets/images/search.svg', className="svg"),
-            dcc.Input(id="search", type="search", placeholder="search..."),
+            dcc.Input(id="search_motif", type="search",
+                      placeholder="search..."),
         ],
             className="input_container"
         ),
@@ -107,7 +110,8 @@ layout = html.Section([
                     }
                 ]
             ),
-            html.Img(src='./assets/images/wordCloud.png',style={'padding':'1rem 0'}),
+            html.Img(src='./assets/images/wordCloud.png',
+                     style={'padding': '1rem 0', 'width': '25rem'}),
         ]),
         dcc.Graph(id='graph', figure=fig)
     ],
@@ -117,30 +121,20 @@ layout = html.Section([
     className="container")
 
 
-# @callback(
-#     Output("concord", "data"),
-#     Output("graph", "figure"),
-#     Input("search", "value"),
-#     Input("limit", "value"),
-# )
-
-@callback(Output('concord', 'data'), Input('search', 'value'), Input("limit", "value"))
+@callback(Output('concord', 'data'), Input('search_motif', 'value'), Input("limit", "value"))
 def updateTable(input_value, limit):
-    if input_value == '':
-        df = pd.DataFrame()
+    if input_value:
+        df = corpus.concorde(input_value.lower(), limit)
         return df.to_dict('records')
-    df = corpus.concorde(input_value, limit)
-    return df.to_dict('records')
 
-@callback(Output("graph", "figure"), Input('search', 'value'))
+
+@callback(Output("graph", "figure"), Input('search_motif', 'value'))
 def updateGraph(input_value):
-    graph = corpus.searchEngine(input_value)
+    if input_value:
+        graph = corpus.searchEngine(input_value.lower())
+    else:
+        graph = None
     fig = px.bar(graph, labels={
         'index': 'documents', 'value': 'score'}, color_discrete_map={'score': '#2dd4bf'})
-    fig.update_layout(paper_bgcolor="#102D44",
-                      plot_bgcolor='#102D44',
-                      font_color='white',
-                      hoverlabel={
-                          'bgcolor': '#1E3851'
-                      })
+    update_fig(fig)
     return fig

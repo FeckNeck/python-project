@@ -1,6 +1,35 @@
 import dash
 from dash import Dash, html, dcc
 
+# ----- # - Create Corpus file - # ----- #
+
+# from modules.Corpus import Corpus
+# from modules.Json import Json
+# from modules.Request import Request
+
+# re = Request()
+# re.fetchReddit()
+# re.fecthArxiv()
+
+# dicDoc = re.getDicDoc()
+# dicAuth = re.getDicAuthor()
+
+# c = Corpus('Corpus Arxiv/Reddit', dicAuth, dicDoc, len(dicDoc), len(dicAuth))
+
+# j = Json()
+# j.saveCorpus(c)
+
+# ----- # - Create WordCloud - # ----- #
+
+# words = corpus.clean_doc()
+# text = ' '.join(words)
+
+# wordcloud = WordCloud(background_color='white', max_words=50).generate(text)
+# plt.imshow(wordcloud)
+# plt.axis("off")
+# plt.savefig('assets/images/wordCloud.png')
+
+
 app = Dash(__name__, suppress_callback_exceptions=True, use_pages=True)
 
 app.layout = html.Div([
@@ -21,6 +50,7 @@ app.layout = html.Div([
     dash.page_container,
 ],
     style={
+    'min-height': '100vh',
     'background-color': '#0D2438',
     'color': 'white'
 },

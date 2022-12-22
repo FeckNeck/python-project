@@ -1,18 +1,13 @@
-from modules.Singleton import singleton
+# from modules.Singleton import singleton
 import re
-import json
 import string
 import math
 import numpy as np
 from pandas import DataFrame
-from matplotlib import pyplot
-from scipy.sparse import csr_matrix
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from nltk.stem.snowball import SnowballStemmer
 #import nltk
 # nltk.download('stopwords')
-from sklearn.feature_extraction.text import CountVectorizer
 
 
 class Corpus:
@@ -36,6 +31,12 @@ class Corpus:
         rep += '\nNombre de docs : ' + str(self.ndoc) + '\n'
         rep += 'Nombre de Autheurs : ' + str(self.nauth) + '\n'
         return rep
+
+    def getDicDoc(self):
+        return self.dicDoc
+
+    def setDicDoc(self, newDic):
+        self.dicDoc = newDic
 
     def addDocument(self, doc):
         nbDoc = len(self.dicDoc)
@@ -114,11 +115,13 @@ class Corpus:
         stop_words = set(stopwords.words('english'))
         words = [w for w in words if not w in stop_words]
 
-        stemmer = SnowballStemmer(language='english')
-        stemmed = [stemmer.stem(word) for word in words]
-        stemmed = list(dict.fromkeys(stemmed))
+        # Racinisation
+        # stemmer = SnowballStemmer(language='english')
+        # stemmed = [stemmer.stem(word) for word in words]
 
-        return stemmed
+        final = list(dict.fromkeys(words))
+
+        return final
 
     def wordFrequency(self, limit=0):
         dictionary = self.clean_doc()
@@ -208,7 +211,6 @@ class Corpus:
         return mat_TFxIDF
 
     def searchEngine(self, motif):
-
         keywords = motif.split(' ')
 
         vocab = self.createVocab()
@@ -229,8 +231,4 @@ class Corpus:
             vecScore.append(score)
 
         df = DataFrame(vecScore, columns=['score'])
-        df = df.sort_values(by='score', ascending=False)
         return df
-
-    def getDicDoc(self):
-        return self.dicDoc

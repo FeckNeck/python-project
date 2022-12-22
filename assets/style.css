@@ -114,4 +114,28 @@ input:focus{
 
 .Select-value-label { 
     color: white !important;
-}*/
+}
+
+.dash-fixed-content{
+    min-height: 4rem !important;
+}
+
+.rc-slider-mark-text{
+    font-size:x-small;
+    width:2rem;
+    color:white;
+    transition:all 300ms;
+}
+
+.rc-slider-mark-text-active{
+    color:#2dd4bf;
+    transition:all 300ms;
+}
+
+.rc-slider-track{
+    background-color:#2dd4bf;
+}
+
+.rc-slider-dot{
+    background-color:#1e3851;
+}
