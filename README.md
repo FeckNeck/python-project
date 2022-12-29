@@ -10,7 +10,7 @@ Python and dash using sklearn library for text pre-processing
 ```
 Download this project
 ```
-Download external python library from requirement.txt file with command :
+Download external python libraries from requirement.txt file with command :
 ```
 py -m pip install -r requirements.txt
 ```
