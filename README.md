@@ -10,8 +10,9 @@ Python and dash using sklearn library for text pre-processing
 ```
 Download this project
 ```
+Download external python library from requirement.txt file with command :
 ```
-Download external python library from requirement.txt file
+py -m pip install -r requirements.txt
 ```
 If you have any trouble with sklearn stopwords, please run in your python terminal :
 ```
