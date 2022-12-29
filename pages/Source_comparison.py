@@ -2,11 +2,11 @@ import dash
 from dash import html, dcc, callback, Input, Output, State, dash_table
 import plotly.express as px
 import pandas as pd
-from modules.Json import Json
+from modules.Api import Api
 from datetime import datetime
 
-json = Json()
-corpus = json.loadCorpus()
+api = Api()
+corpus = api.loadCorpus()
 dicDoc = corpus.getDicDoc()
 
 
@@ -64,7 +64,7 @@ layout = html.Section([
     ),
     html.Div(  # -- Table Documents -- #
         dash_table.DataTable(
-            id='documents',
+            id='table',
             fill_width=True,
             virtualization=True,
             data=df.to_dict('records'),
@@ -88,7 +88,7 @@ layout = html.Section([
 
 
 @callback(  # -- Filter Table  and Update Graph-- #
-    Output('documents', 'data'),
+    Output('table', 'data'),
     Output('graph_TF', 'figure'),
     Input('search', 'value'),
     State('search', 'value'),

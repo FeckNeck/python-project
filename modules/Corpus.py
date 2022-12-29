@@ -187,8 +187,8 @@ class Corpus:
         #mat_TF = csr_matrix(matrix)
         return matrix
 
-    def ceateIDF(self):
-        vocab = self.nettoyer_texte()
+    def createIDF(self):
+        vocab = self.clean_doc()
         IDF = np.empty(len(vocab))
 
         for i in range(0, len(vocab)):
@@ -204,18 +204,44 @@ class Corpus:
 
     def createMatTF_IDF(self):
         TF = self.createTF()
-        IDF = self.ceateIDF()
+        IDF = self.createIDF()
         mat_TFxIDF = []
         for i in TF:
             mat_TFxIDF.append(i * IDF)
         return mat_TFxIDF
 
-    def searchEngine(self, motif):
-        keywords = motif.split(' ')
+    def create_BM25(self, words):
+        avgdl = 0
+        for i in self.dicDoc.values():
+            avgdl += len(i.text.split())
+        avgdl = avgdl/len(self.dicDoc)
+        k = 1.2
+        b = 0.75
+        vecScore = [0] * len(self.dicDoc)
+        for i in words:
+            for k, j in self.dicDoc.items():
+                f = 0
+                D = len(j.text.split())
+                if i in j.text:
+                    f = j.text.count(i) / D
+                deno = (f + k * (1 - b + b * (D/avgdl)))
+                if deno:
+                    idf = f*(k+1) / deno
+                    vecScore[k] = idf
+        df = DataFrame(vecScore, columns=['score'])
+        return df
+
+    def searchEngine(self, motif, methode='TF'):
+        keywords = motif.split()
+        if methode == 'BM25':
+            df = self.create_BM25(keywords)
+            return df
 
         vocab = self.createVocab()
-
-        mat_TF = self.createTF()
+        if methode == 'TF':
+            mat_TF = self.createTF()
+        if methode == 'TF-IDF':
+            mat_TF = self.createMatTF_IDF()
 
         vecKeyword = [0] * len(vocab)
         vecScore = []

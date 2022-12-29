@@ -1,11 +1,11 @@
 import dash
-from dash import html, dcc, callback, Input, Output, dash_table
+from dash import html, dcc, callback, Input, State, Output, dash_table
 import plotly.express as px
 import pandas as pd
-from modules.Json import Json
+from modules.Api import Api
 
-json = Json()
-corpus = json.loadCorpus()
+api = Api()
+corpus = api.loadCorpus()
 dicDoc = corpus.getDicDoc()
 
 
@@ -62,7 +62,9 @@ layout = html.Section([
             className="input_container"
         ),
         dcc.Input(id="limit", type="number", value=10,
-                  placeholder="Limit", min="10", max="30")
+                  placeholder="Limit", min="10", max="30"),
+        dcc.Dropdown(['TF', 'TF-IDF', 'BM25'], 'TF', id='ponderation',
+                     clearable=False, style={'width': '6rem'}),
     ],
         className='filters_container'
     ),
@@ -121,17 +123,27 @@ layout = html.Section([
     className="container")
 
 
-@callback(Output('concord', 'data'), Input('search_motif', 'value'), Input("limit", "value"))
+@callback(Output('concord', 'data'),
+          Input('search_motif', 'value'),
+          Input("limit", "value")
+          )
 def updateTable(input_value, limit):
     if input_value:
         df = corpus.concorde(input_value.lower(), limit)
         return df.to_dict('records')
 
 
-@callback(Output("graph", "figure"), Input('search_motif', 'value'))
-def updateGraph(input_value):
+@callback(Output("graph", "figure"),
+          Input('search_motif', 'value'),
+          State('search_motif', 'value'),
+          Input('ponderation', 'value'),
+          State('ponderation', 'value')
+          )
+def updateGraph(input_value, savedSearch, ponderation, savedPonde):
     if input_value:
-        graph = corpus.searchEngine(input_value.lower())
+        graph = corpus.searchEngine(input_value.lower(), savedPonde)
+    elif ponderation and savedSearch:
+        graph = corpus.searchEngine(savedSearch.lower(), ponderation)
     else:
         graph = None
     fig = px.bar(graph, labels={

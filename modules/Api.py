@@ -1,4 +1,4 @@
-from modules.Document import Document, RedditDocument, ArxivDocument
+from modules.Document import Document
 from modules.Author import Author
 from datetime import datetime
 from modules.DocumentGenerator import DocumentGenerator
@@ -7,17 +7,17 @@ import praw
 import urllib
 import urllib.request
 import xmltodict
-import json
+import pickle
 
 
-class Request:
+class Api:
 
     def __init__(self):
         self.cpt = 0
         self.dicDoc = {}
         self.dicAuthor = {}
 
-    def fetchReddit(self):
+    def fetchReddit(self, limit=15):
         reddit = praw.Reddit(
             client_id="hlsFU3IkM2cOeG_rxaI7NQ",
             client_secret="51Lc0MLl9-4BzD3UCxD94yiOOwR_hg",
@@ -26,7 +26,7 @@ class Request:
         )
 
         ml_subreddit = reddit.subreddit('MachineLearning')
-        for post in ml_subreddit.hot(limit=15):
+        for post in ml_subreddit.hot(limit=limit):
             date = str(datetime.fromtimestamp(post.created_utc))
             date = date.split()[0]
             name = str(post.author)
@@ -39,8 +39,9 @@ class Request:
             self.dicAuthor[name].add(doc)
             self.cpt = self.cpt + 1
 
-    def fecthArxiv(self):
-        url = 'http://export.arxiv.org/api/query?search_query=all:electron&start=0&max_results=15'
+    def fetchArxiv(self, limit=15):
+        url = 'http://export.arxiv.org/api/query?search_query=all:electron&start=0&max_results=' + \
+            str(limit)
         data = urllib.request.urlopen(url)
         xml = xmltodict.parse(data.read().decode('utf-8'))
 
@@ -68,6 +69,15 @@ class Request:
                 'arxiv', i['title'], primaryAuthor, date, listLink, i['summary'], coAuthors=listAuthor)
             self.dicDoc[self.cpt] = doc
             self.cpt = self.cpt + 1
+
+    def saveCorpus(self, corpus):
+        with open("data/corpus.pkl", "wb") as f:
+            pickle.dump(corpus, f)
+
+    def loadCorpus(self):
+        with open("data/corpus.pkl", "rb") as f:
+            corpus = pickle.load(f)
+            return corpus
 
     def getDicDoc(self):
         return self.dicDoc

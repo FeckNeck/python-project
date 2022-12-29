@@ -1,33 +1,34 @@
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 import dash
 from dash import Dash, html, dcc
 
 # ----- # - Create Corpus file - # ----- #
 
-# from modules.Corpus import Corpus
-# from modules.Json import Json
-# from modules.Request import Request
+from modules.Corpus import Corpus
+from modules.Api import Api
 
-# re = Request()
-# re.fetchReddit()
-# re.fecthArxiv()
+api = Api()
+api.fetchReddit()
+api.fetchArxiv()
 
-# dicDoc = re.getDicDoc()
-# dicAuth = re.getDicAuthor()
+dicDoc = api.getDicDoc()
+dicAuth = api.getDicAuthor()
 
-# c = Corpus('Corpus Arxiv/Reddit', dicAuth, dicDoc, len(dicDoc), len(dicAuth))
+corpus = Corpus('Corpus Arxiv/Reddit', dicAuth,
+                dicDoc, len(dicDoc), len(dicAuth))
 
-# j = Json()
-# j.saveCorpus(c)
+api.saveCorpus(corpus)
 
 # ----- # - Create WordCloud - # ----- #
 
-# words = corpus.clean_doc()
-# text = ' '.join(words)
+words = corpus.clean_doc()
+text = ' '.join(words)
 
-# wordcloud = WordCloud(background_color='white', max_words=50).generate(text)
-# plt.imshow(wordcloud)
-# plt.axis("off")
-# plt.savefig('assets/images/wordCloud.png')
+wordcloud = WordCloud(background_color='white', max_words=50).generate(text)
+plt.imshow(wordcloud)
+plt.axis("off")
+plt.savefig('assets/images/wordCloud.png')
 
 
 app = Dash(__name__, suppress_callback_exceptions=True, use_pages=True)
