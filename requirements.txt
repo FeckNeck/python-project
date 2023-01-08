@@ -8,5 +8,10 @@ urllib3==1.26.13
 yarg==0.1.9
 matplotlib==3.6.2
 wordcloud==1.8.2.2
+dash==2.7.1
 nltk==3.8
+pandas==1.5.2
+praw==7.6.1
+xmltodict==0.13.0
+
 
